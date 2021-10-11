@@ -27,14 +27,70 @@ STAT_198_Food_Security_Dataset <-
 
 (The introduction should introduce your general research question and your data (where it came from, how it was collected, what are the cases, what are the variables, etc.). Your research questions should be clearly specified. The motivation for your research question should be clear, with citations to relevant literature as appropriate.)
 
-# Glimpse
+The persistent issue of food insecurity is a complex but important factor in a person’s well-being and nutrition, and is an important social determinant of health. It's defined by the Food and Agriculture Organization of the United Nations as lack of "regular access to enough safe and nutritious food for normal growth and development and for an active and healthy life."
 
-(Please use `glimpse` for your data, uploaded into the data folder, here.)
+There are a variety of factors that have the potential to impact food security. Our project aims to determine the extent to which other variables have the ability to predict the state of food insecurity among North Carolinian counties using a number of related variables that address employment, meal price, education level, and urbanization. We furthermore hope to explore the true impact that COVID-19 has had on North Carolina’s state of food insecurity and childhood food security across North Carolina’s counties. 
+
+Our data directly related to food insecurity and employment, as well as employment, in 2019 (pre-COVID-19) and 2021 (post-COVID-19) was sourced from Feeding America, the United States’ largest hunger relief organization, that compiles national, state, and local data on food insecurity as a part of the organization’s “Map the Meal Gap” and “Coronavirus and Food Security” Research Initiatives. 
+
+Our data related to education level and urbanization in North Carolinian counties was sourced from the USDA’s Economic Research Service and the results of the American Community Survey from 2015 to 2019. The results for these variables for each North Carolinian county were combined into one Excel sheet and programmed for use in R.
+
+
+# Glimpse
 ```{r glimpse_data}
 glimpse(STAT_198_Food_Security_Dataset)
 view(STAT_198_Food_Security_Dataset)
 ```
 # Data Analysis Plan
 
-(Specify the outcome (response, Y) and predictor (explanatory, X) variables you will use to answer your question, as well as the comparison groups you will use, if applicable. You may include very preliminary exploratory data analysis, including some summary statistics and visualizations, along with some explanation on how they help you learn more about your data. Note the statistical method(s) that you believe will be useful in answering your question(s). 
+(Specify the outcome (response, Y) and predictor (explanatory, X) variables you will use to answer your question, as well as the comparison groups you will use, if applicable. Note the statistical method(s) that you believe will be useful in answering your question(s).
+
+## STAT 198 Food Security Dataset
+
+|variable                                         |description|
+|:----------------                                |:-----------|
+|County                                           | North Carolina County each row refers to |
+|2019 FI Percent                                  |Percent of County Residents Identified as Food Insecure in 2019|
+|2019 Child FI Percent                            |Percent of County Residents under 18 years old Identified as Food Insecure in 2019|
+|2021 FI Percentage                               |Percent of County Residents Identified as Food Insecure in 2021|
+|2019-2021 FI Percent Change                      |Change in Percent of County Residents Identified as Food Insecure from 2019 to 2021|
+|2019-2021 Unemployment Change                    |Change in Percent of County Residents Identified as Unemployed from 2019 to 2021|
+|2021 Child FI Percent                            |Percent of County Residents under 18 years old Identified as Food Insecure in 2021|
+|2019-2021 Child FI Percent Change                |Change in Percent of County Residents under 18 years old Identified as Food Insecure from 2019 to 2021|
+|2019 Cost per Meal                               |Estimated Cost per County of the Cost of a Meal from 2019 to 2021|
+|2013 Rural-urban Continuum Code                  |2013 Country Designation of Degree of Urbanization and Adjacency to a Metro Area|
+|2013 Urban Influence Code                        |2013 Country Designation of Size of Largest City/Town and Adjacency to a Metro Area|
+|Less than HS Diploma, 2015-9, Percent            |2015-9 Estimate of County Residents with Less than a High School Diploma in Education|
+|Only HS Diploma, 2015-9, Percent                 |2015-9 Estimate of County Residents with only a High School Diploma in Education|
+|Some College Education Completed, 2015-9, Percent|2015-9 Estimate of County Residents with Some College Education Completed|
+|College Degree Obtained, 2015-9, Percent         |2015-9 Estimate of County Residents with an Associates, Bachelor's, or other Degree Obtained|
+
+
+
+```{r early-visual1, fig.asp = 0.8, fig.width = 3, message = F, echo=FALSE}
+ggplot(STAT_198_Food_Security_Dataset, aes(y = `2019-2021 FI Percent Change` )) +
+  geom_bar()  +
+  labs (
+    x = "2019-2021 FI Percent Change",
+    y = "Number of Counties",
+    title = "2019-2021 FI Percent Change by County",
+    )
+``` 
+
+The interest of this visualization is to help us mesure what the change in Food Insecurity look like in between the period before and after COVID lockdowns. It is useful in identifying a clear trend, as well as the existence of outliers
+```{r early-visual2, fig.asp = 0.8, fig.width = 3, message = F, echo=FALSE}
+ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
+                                           y = `2019-2021 Unemployment Change`)) +
+  geom_point() +
+  labs(
+    title = "Change in Food Insecurity Compared to Change in Unemployment",
+    subtitle = "2019-2021",
+    x = "2019-2021 FI Percent Change",
+    y = "2019-2021 Unemployment Change"
+  )
+``` 
+
+The interest of this visualization is to identify if there's a correlation between one of our variable, the change in unemployment rates and the change in food insecurity.
+
+
 What results from these specific statistical methods are needed to support your hypothesized answer?)
