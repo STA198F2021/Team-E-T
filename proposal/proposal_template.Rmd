@@ -69,7 +69,7 @@ We aim to use regression analysis to determine the extent to which the different
 
 We hypothesize that a higher level of unemployment, higher meal prices, lower levels of education, and a greater degree of ruralness on the Urban-Rural Continuum at the county level have a strong association with a higher level of food insecurity for both the general population and for children. Results to support this conclusion would involve a correlation coefficient with an absolute value close to 1, and a regression line with a strongly positive or negative slope relative for the variables we are observing.
 
-```{r early-visual2, message = FALSE, warning = FALSE, echo = FALSE}
+```{r early-visual2, fig.asp = 0.8, fig.width = 4.5, message = FALSE, warning = FALSE, echo = FALSE}
 ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
                                            y = `2019-2021 Unemployment Change`)) +
   geom_point() +
@@ -78,8 +78,10 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
     subtitle = "2019-2021",
     x = "2019-2021 FI Percent Change",
     y = "2019-2021 Unemployment Change"
-  )
+  ) + theme(plot.title = element_text(size=8.5), axis.text=element_text(size=8))
 ``` 
+
+The purpose of this scatterplot is to give a clear sense of the possible correlation between higher unemployment levels and higher food insecurity levels. The plot seems to indicate a strong positive correlation between those two variables, in accordance with our hypothesis.
 
 ```{r early-visual3, message = FALSE, warning = FALSE, echo = FALSE}
 library(spdep)
