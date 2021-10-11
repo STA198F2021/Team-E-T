@@ -38,35 +38,20 @@ Our data related to education level and urbanization in North Carolinian countie
 Variables Description:
 
 County: North Carolina County each row refers to.
-
 2019 FI Percent: Percent of County Residents Identified as Food Insecure in 2019
-
 2019 Child FI Percent: Percent of County Residents under 18 years old Identified as Food Insecure in 2019
-
 2021 FI Percentage: Percent of County Residents Identified as Food Insecure in 2021
-
 2019-2021 FI Percent Change:Change in Percent of County Residents Identified as Food Insecure from 2019 to 2021
-
 2019-2021 Unemployment Change: Change in Percent of County Residents Identified as Unemployed from 2019 to 2021
-
 2021 Child FI Percent: Percent of County Residents under 18 years old Identified as Food Insecure in 2021
-
 2019-2021 Child FI Percent Change: Change in Percent of County Residents under 18 years old Identified as Food Insecure from 2019 to 2021
-
 2019 Cost per Meal : Estimated Cost per County of the Cost of a Meal from 2019 to 2021
-
 2013 Rural-urban Continuum Code: 2013 Country Designation of Degree of Urbanization and Adjacency to a Metro Area
-
 2013 Urban Influence Code: 2013 Country Designation of Size of Largest City/Town and Adjacency to a Metro Area
-
 Less than HS Diploma, 2015-9, Percent: 2015-9 Estimate of County Residents with Less than a High School Diploma in Education
-
 Only HS Diploma, 2015-9, Percent: 2015-9 Estimate of County Residents with only a High School Diploma in Education
-
 Some College Education Completed, 2015-9, Percent: 2015-9 Estimate of County Residents with Some College Education Completed
-
 College Degree Obtained, 2015-9, Percent: 2015-9 Estimate of County Residents with an Associates, Bachelor's, or other Degree Obtained
-
 
 # Glimpse
 ```{r glimpse_data}
@@ -92,6 +77,22 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
   )
 ``` 
 
+```{r early-visual3}
+library(spdep)
+nc <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE) %>%
+rename(County = NAME)
+nc_plot <- STAT_198_Food_Security_Dataset %>%
+full_join(nc)
+
+ggplot(data = nc_plot)+
+  geom_sf(aes(fill= `2019-2021 FI Percent Change`, geometry = geometry)) +
+  labs(title = "Food Security in NC Counties: 2019 to 2021") +
+scale_fill_continuous(low = "yellow", high = "red", name = "Percent Difference in Food 
+Security: 2019 to 2021", label = scales::comma) + 
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+```
+```
 The interest of this visualization is to identify if there's a correlation between one of our variable, the change in unemployment rates and the change in food insecurity.
 
 Note the statistical method(s) that you believe will be useful in answering your question(s).
