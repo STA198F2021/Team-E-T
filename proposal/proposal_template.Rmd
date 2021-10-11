@@ -19,15 +19,8 @@ library(tinytex)
 
 # Load Data
 ```{r load-data, message = F}
-Counties_by_Race <- read_excel("~/R/Team-E-T/data/Counties_by_Race.xlsx")
-Counties_by_Ethnicity <- read_excel("~/R/Team-E-T/data/Counties_by_Ethnicity.xlsx")
-Counties_by_LEP <- read_csv("~/R/Team-E-T/data/Counties_by_LEP.csv")
-Counties_by_FI_March21 <- read_excel("~/R/Team-E-T/data/Counties_by_FI_March21.xlsx", 
-    sheet = "County - 2021 Projections")
-Counties_by_VLFI_March21 <- read_excel("~/R/Team-E-T/data/Counties_by_VLFI_March21.xlsx", 
-    sheet = "County - 2021 Projections")
-Counties_by_FI_2019 <- read_excel("~/R/Team-E-T/data/Counties_by_FI_2019.xlsx", 
-    sheet = "2019 County")
+STAT_198_Food_Security_Dataset <- 
+  read_excel("~/R/Team-E-T/data/STAT 198 Food Security Dataset.xlsx", sheet = " County Projections")
 ```
 
 # Introduction and Data, including Research Questions
@@ -38,12 +31,8 @@ Counties_by_FI_2019 <- read_excel("~/R/Team-E-T/data/Counties_by_FI_2019.xlsx",
 
 (Please use `glimpse` for your data, uploaded into the data folder, here.)
 ```{r glimpse_data}
-glimpse(Counties_by_Race)
-glimpse(Counties_by_Ethnicity)
-glimpse(Counties_by_FI_2019)
-glimpse(Counties_by_FI_March21)
-glimpse(Counties_by_VLFI_March21)
-glimpse(Counties_by_LEP)
+glimpse(STAT_198_Food_Security_Dataset)
+view(STAT_198_Food_Security_Dataset)
 ```
 # Data Analysis Plan
 
