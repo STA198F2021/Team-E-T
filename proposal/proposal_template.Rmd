@@ -65,7 +65,7 @@ Predictor variables : Employment, Education, Rural-Urban Continuum, Cost per Mea
 
 
 
-```{r early-visual2, fig.asp = 0.8, fig.width = 3, message = F, echo=FALSE}
+```{r early-visual2, message = F, echo=FALSE}
 ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
                                            y = `2019-2021 Unemployment Change`)) +
   geom_point() +
@@ -77,7 +77,7 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
   )
 ``` 
 
-```{r early-visual3}
+```{r early-visual3, echo=FALSE, warning=FALSE}
 library(spdep)
 nc <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE) %>%
 rename(County = NAME)
@@ -99,7 +99,6 @@ Note the statistical method(s) that you believe will be useful in answering your
 
 Statistical methods:
 
-Hypothesis testing
 Correlation
 Regression 
 
