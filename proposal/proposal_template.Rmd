@@ -78,7 +78,7 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
     subtitle = "2019-2021",
     x = "2019-2021 FI Percent Change",
     y = "2019-2021 Unemployment Change"
-  ) + theme(plot.title = element_text(size=8.5), axis.text=element_text(size=8))
+  ) + theme(plot.title = element_text(size=8.5), plot.subtitle = element_text(size=8), axis.title=element_text(size=8))
 ``` 
 
 The purpose of this scatterplot is to give a clear sense of the possible correlation between higher unemployment levels and higher food insecurity levels. The plot seems to indicate a strong positive correlation between those two variables, in accordance with our hypothesis.
@@ -99,3 +99,6 @@ Security: 2019 to 2021", label = scales::comma) +
         axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
 ```
 Note: NC Map Data sourced from https://r-spatial.github.io/spdep/articles/sids.html
+
+The purpose of this spatial map visualization is to explore the rural and urban impact of food security in North Carolina counties. Being able to explore the percent change in food security for the counties in and around the Charlotte and Triangle area as opposed to the more rural Eastern and Western portions of the state reveal interesting results. For example, there was a rise in food security in the urban areas surrounding Charlotte, but not in Eastern North Carolina, and there was a county that decreased in food insecurity in the pandemic, complicating our hypothesis, which we will explore further with other statistical tests.
+
