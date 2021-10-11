@@ -11,7 +11,7 @@ output:
 
 # Load Packages
 
-```{r load-packages, message = FALSE, warning = FALSE}
+```{r load-packages, message = FALSE, warning = FALSE, echo = FALSE}
 library(tidyverse) 
 library(readxl)
 library(tinytex)
@@ -33,39 +33,43 @@ Our data directly related to food insecurity and employment, as well as employme
 
 Our data related to education level and urbanization in North Carolinian counties was sourced from the USDA’s Economic Research Service and the results of the American Community Survey from 2015 to 2019. The results for these variables for each North Carolinian county were combined into one Excel sheet and programmed for use in R.
 
+Feeding America Data was sourced from here: https://www.feedingamerica.org/research/map-the-meal-gap/by-county
+USDA Economic Research Service Data was sourced from here: https://www.ers.usda.gov/data-products/county-level-data-sets/download-data/
+
 ## STAT 198 Food Security Dataset
 
 Variables Description:
 
-County: North Carolina County each row refers to.
-2019 FI Percent: Percent of County Residents Identified as Food Insecure in 2019
-2019 Child FI Percent: Percent of County Residents under 18 years old Identified as Food Insecure in 2019
-2021 FI Percentage: Percent of County Residents Identified as Food Insecure in 2021
-2019-2021 FI Percent Change:Change in Percent of County Residents Identified as Food Insecure from 2019 to 2021
-2019-2021 Unemployment Change: Change in Percent of County Residents Identified as Unemployed from 2019 to 2021
-2021 Child FI Percent: Percent of County Residents under 18 years old Identified as Food Insecure in 2021
-2019-2021 Child FI Percent Change: Change in Percent of County Residents under 18 years old Identified as Food Insecure from 2019 to 2021
-2019 Cost per Meal : Estimated Cost per County of the Cost of a Meal from 2019 to 2021
-2013 Rural-urban Continuum Code: 2013 Country Designation of Degree of Urbanization and Adjacency to a Metro Area
-2013 Urban Influence Code: 2013 Country Designation of Size of Largest City/Town and Adjacency to a Metro Area
-Less than HS Diploma, 2015-9, Percent: 2015-9 Estimate of County Residents with Less than a High School Diploma in Education
-Only HS Diploma, 2015-9, Percent: 2015-9 Estimate of County Residents with only a High School Diploma in Education
-Some College Education Completed, 2015-9, Percent: 2015-9 Estimate of County Residents with Some College Education Completed
-College Degree Obtained, 2015-9, Percent: 2015-9 Estimate of County Residents with an Associates, Bachelor's, or other Degree Obtained
+`County` is which North Carolina County each row refers to. 
+`2019 FI Percent` is the percent of County Residents Identified as Food Insecure in 2019
+`2019 Child FI Percent` is the percent of County Residents under 18 years old Identified as Food Insecure in 2019
+`2021 FI Percentage` is the percent of County Residents Identified as Food Insecure in 2021
+`2019-2021 FI Percent Change` is the change in Percent of County Residents Identified as Food Insecure from 2019 to 2021
+`2019-2021 Unemployment Change` is the change in Percent of County Residents Identified as Unemployed from 2019 to 2021
+`2021 Child FI Percent` is the percent of County Residents under 18 years old Identified as Food Insecure in 2021
+`2019-2021 Child FI Percent Change` is the change in Percent of County Residents under 18 years old Identified as Food Insecure from 2019 to 2021
+`2019 Cost per Meal` is the estimated Cost per County of the Cost of a Meal from 2019 to 2021
+`2013 Rural-urban Continuum Code` is the 2013 Country Designation of Degree of Urbanization and Adjacency to a Metro Area
+`2013 Urban Influence Code` is the 2013 Country Designation of Size of Largest City/Town and Adjacency to a Metro Area
+`Less than HS Diploma, 2015-9, Percent` is the 2015-9 Estimate of County Residents with Less than a High School Diploma in Education
+`Only HS Diploma, 2015-9, Percent` is the 2015-9 Estimate of County Residents with only a High School Diploma in Education
+`Some College Education Completed, 2015-9, Percent` is the 2015-9 Estimate of County Residents with Some College Education Completed
+`College Degree Obtained, 2015-9, Percent` is the 2015-9 Estimate of County Residents with an Associates, Bachelor's, or other Degree Obtained
 
 # Glimpse
 ```{r glimpse_data}
 glimpse(STAT_198_Food_Security_Dataset)
-view(STAT_198_Food_Security_Dataset)
 ```
+
 # Data Analysis Plan
 
-Outcome variable: Food Security
-Predictor variables : Employment, Education, Rural-Urban Continuum, Cost per Meal.
+We intend to use readings of Food Insecurity and Child Food Insecurity by county as determined by Feeding America as the outcome or response Y, while using other variables in our dataset related to one’s social determinants of health, particularly employment, meal price, education level, and urbanization, as potential explanatory variables for the final response, Y. We also hope to conduct a similar analysis comparing 2019 Food Security by County to 2021 Food Security by County and determining whether or not particular variables serve as predictors not only in food insecurity, but changes to food security from pre to post-COVID.
 
+We aim to use regression analysis to determine the extent to which the different variables in our dataset serve as a strong predictor of food insecurity and child food insecurity among North Carolinian counties. We will determine the correlation coefficient for each of the variables in relation to food insecurity and child food insecurity in 2019, 2021, and the percent difference in food insecurity and child food insecurity from 2019 to 2021 to reflect the impact of COVID on these measures.
 
+We hypothesize that a higher level of unemployment, higher meal prices, lower levels of education, and a greater degree of ruralness on the Urban-Rural Continuum at the county level have a strong association with a higher level of food insecurity for both the general population and for children. Results to support this conclusion would involve a correlation coefficient with an absolute value close to 1, and a regression line with a strongly positive or negative slope relative for the variables we are observing.
 
-```{r early-visual2, message = F, echo=FALSE}
+```{r early-visual2, message = FALSE, warning = FALSE, echo = FALSE}
 ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
                                            y = `2019-2021 Unemployment Change`)) +
   geom_point() +
@@ -77,7 +81,7 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `2019-2021 FI Percent Change`,
   )
 ``` 
 
-```{r early-visual3, echo=FALSE, warning=FALSE}
+```{r early-visual3, message = FALSE, warning = FALSE, echo = FALSE}
 library(spdep)
 nc <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE) %>%
 rename(County = NAME)
@@ -92,14 +96,4 @@ Security: 2019 to 2021", label = scales::comma) +
   theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),
         axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
 ```
-```
-The interest of this visualization is to identify if there's a correlation between one of our variable, the change in unemployment rates and the change in food insecurity.
-
-Note the statistical method(s) that you believe will be useful in answering your question(s).
-
-Statistical methods:
-
-Correlation
-Regression 
-
-What results from these specific statistical methods are needed to support your hypothesized answer?)
+Note: NC Map Data sourced from https://r-spatial.github.io/spdep/articles/sids.html
