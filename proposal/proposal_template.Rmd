@@ -29,26 +29,6 @@ STAT_198_Food_Security_Dataset <-
 
 # Glimpse
 
-## STAT 198 Food Security Dataset
-
-|variable                                         |description|
-|:----------------                                |:-----------|
-|County                                           | North Carolina County each row refers to |
-|2019 FI Percent                                  |Percent of County Residents Identified as Food Insecure in 2019|
-|2019 Child FI Percent                            |Percent of County Residents under 18 years old Identified as Food Insecure in 2019|
-|2021 FI Percentage                               |Percent of County Residents Identified as Food Insecure in 2021|
-|2019-2021 FI Percent Change                      |Change in Percent of County Residents Identified as Food Insecure from 2019 to 2021|
-|2019-2021 Unemployment Change                    |Change in Percent of County Residents Identified as Unemployed from 2019 to 2021|
-|2021 Child FI Percent                            |Percent of County Residents under 18 years old Identified as Food Insecure in 2021|
-|2019-2021 Child FI Percent Change                |Change in Percent of County Residents under 18 years old Identified as Food Insecure from 2019 to 2021|
-|2019 Cost per Meal                               |Estimated Cost per County of the Cost of a Meal from 2019 to 2021|
-|2013 Rural-urban Continuum Code                  |2013 Country Designation of Degree of Urbanization and Adjacency to a Metro Area|
-|2013 Urban Influence Code                        |2013 Country Designation of Size of Largest City/Town and Adjacency to a Metro Area|
-|Less than HS Diploma, 2015-9, Percent            |2015-9 Estimate of County Residents with Less than a High School Diploma in Education|
-|Only HS Diploma, 2015-9, Percent                 |2015-9 Estimate of County Residents with only a High School Diploma in Education|
-|Some College Education Completed, 2015-9, Percent|2015-9 Estimate of County Residents with Some College Education Completed|
-|College Degree Obtained, 2015-9, Percent         |2015-9 Estimate of County Residents with an Associates, Bachelor's, or other Degree Obtained|
-
 (Please use `glimpse` for your data, uploaded into the data folder, here.)
 ```{r glimpse_data}
 glimpse(STAT_198_Food_Security_Dataset)
