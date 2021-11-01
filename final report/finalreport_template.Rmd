@@ -11,10 +11,28 @@ output: pdf_document
 library(tidyverse) 
 library(readxl)
 library(tinytex)
-``` 
+library(tidymodels)
+library(infer)
+```
 
 # Load Data
 ```{r load-data, message = F}
 STAT_198_Food_Security_Dataset <- 
   read_excel("~/R/Team-E-T/data/STAT 198 Food Security Dataset.xlsx", sheet = " County Projections")
+```
+
+# Linear Regression Investigation
+```{r run regression}
+STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code` <- as.factor(STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code`)
+
+STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
+  mutate(`2013 Rural-urban Continuum Code`, Urban_cat = ifelse(`2013 Rural-urban Continuum Code`%in% c("1","2","3"), "Urban", "Rural"))
+
+FI2021_cost_rural_hsdiploma <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` + `Urban_cat` + `Less than HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+
+tidy(FI2021_cost_rural_hsdiploma)
+
+FI2021_cost_rural_hsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina")
 ```
