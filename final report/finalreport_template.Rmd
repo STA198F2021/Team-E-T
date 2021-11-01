@@ -5,3 +5,16 @@ author: "Your names and team name here"
 date: ""
 output: pdf_document
 ---
+
+# Load Packages
+```{r load-packages, message = FALSE, warning = FALSE, echo = FALSE}
+library(tidyverse) 
+library(readxl)
+library(tinytex)
+``` 
+
+# Load Data
+```{r load-data, message = F}
+STAT_198_Food_Security_Dataset <- 
+  read_excel("~/R/Team-E-T/data/STAT 198 Food Security Dataset.xlsx", sheet = " County Projections")
+```
