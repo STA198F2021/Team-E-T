@@ -16,29 +16,64 @@ library(infer)
 ```
 
 # Load Data
-```{r load-data, message = F}
+```{r load-data, message = F, warning = FALSE, echo = FALSE}
 STAT_198_Food_Security_Dataset <- 
   read_excel("~/R/Team-E-T/data/STAT 198 Food Security Dataset.xlsx", sheet = " County Projections")
 ```
 
 # T-test
 
-```{r run t-tests}
+```{r run t-tests, message = FALSE, warning = FALSE, echo = FALSE}
+t.test(STAT_198_Food_Security_Dataset$`2019-2021 FI Percent Change`, mu=0)
 
+STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
+  mutate(FI_Diff=`2021 FI Percentage`-`2019 FI Percent`)
+
+t.test(STAT_198_Food_Security_Dataset$FI_Diff, mu=0)
 ```
 
-# Linear Regression Investigation
-```{r run regression}
+# Linear Regression Investigation- 2021
+```{r run_regression_1, message = FALSE, warning = FALSE, echo = FALSE}
 STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code` <- as.factor(STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code`)
 
 STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
   mutate(`2013 Rural-urban Continuum Code`, Urban_cat = ifelse(`2013 Rural-urban Continuum Code`%in% c("1","2","3"), "Urban", "Rural"))
 
-FI2021_cost_rural_hsdiploma <- linear_reg() %>%
+FI2021_cost_rural_lesshsdiploma <- linear_reg() %>%
   set_engine("lm") %>%
   fit(`2021 FI Percentage` ~ `2019 Cost per Meal` + `Urban_cat` + `Less than HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
 
-tidy(FI2021_cost_rural_hsdiploma)
+FI2021_cost_rural_lesshsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina Using Cost of Meal, Urban/Rural County Status, and Percent of County Residents with Less than a High School Diploma")
 
-FI2021_cost_rural_hsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina")
+glance(FI2021_cost_rural_lesshsdiploma)$adj.r.squared
+```
+
+```{r run_regression_2, message = FALSE, warning = FALSE, echo = FALSE}
+FI2021_costandrural_lesshsdiploma <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` * `Urban_cat` + `Less than HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+
+FI2021_costandrural_lesshsdiploma %>% tidy() %>% knitr::kable(caption="Interaction Linear Regression of Food Security in North Carolina Using Cost of Meal and Urban/Rural County Status to Percent of County Residents with a High School Diploma")
+
+glance(FI2021_costandrural_lesshsdiploma)$adj.r.squared
+```
+
+```{r run_regression_3, message = FALSE, warning = FALSE, echo = FALSE}
+FI2021_cost_rural_gothsdiploma <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` + `Urban_cat` + `Only HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+
+FI2021_cost_rural_gothsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina Using Cost of Meal, Urban/Rural County Status, and Percent of County Residents with a High School Diploma")
+
+glance(FI2021_cost_rural_gothsdiploma)$adj.r.squared
+```
+
+```{r run_regression_4, message = FALSE, warning = FALSE, echo = FALSE}
+FI2021_costandrural_gothsdiploma <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` * `Urban_cat` + `Only HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+
+FI2021_costandrural_gothsdiploma %>% tidy() %>% knitr::kable(caption="Interaction Linear Regression of Food Security in North Carolina Using Cost of Meal and Urban/Rural County Status to Percent of County Residents with a High School Diploma")
+
+glance(FI2021_costandrural_gothsdiploma)$adj.r.squared
 ```
