@@ -24,6 +24,7 @@ library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
 library(xaringan)
+library(readxl)
 ```
 
 ```{r setup, include=FALSE}
@@ -38,12 +39,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r load-data, include=FALSE}
-# Load your data here
+finc <- read_excel("~/R/Team-E-T/data/finc.xlsx", sheet = " County Projections")
 ```
 
 ```{r style-slides, echo = FALSE}
 style_xaringan(
-  title_slide_background_image = "img/watercolour_sys02_img34_teacup-ocean.jpg"
+  title_slide_background_image = "img/darkfield.jpg"
 )
 ```
 
