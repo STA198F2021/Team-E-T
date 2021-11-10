@@ -14,26 +14,26 @@ library(infer)
 library(spdep)
 ```
 ```{r load-data-and-mutate, message = F, warning = FALSE, echo = FALSE}
-STAT_198_Food_Security_Dataset <- 
-  read_excel("~/R/Team-E-T/data/STAT 198 Food Security Dataset.xlsx", sheet = " County Projections")
+library(readxl)
+finc <- read_excel("~/R/Team-E-T/data/finc.xlsx", sheet = " County Projections")
 
-STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
-  mutate(FI_Diff=`2021 FI Percentage`-`2019 FI Percent`) %>%
-  mutate(FI_PC_Change= (FI_Diff/`2019 FI Percent`)*100)
+finc_glimpse <- finc
 
-STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code` <- as.factor(STAT_198_Food_Security_Dataset$`2013 Rural-urban Continuum Code`)
+finc <- finc %>%
+  mutate(FI_Diff=`2021 FI Percent`-`FI 2019 Percent`) %>%
+  mutate(FI_PC_Change= (FI_Diff/`FI 2019 Percent`)*100)
 
-STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
-  mutate(`2013 Rural-urban Continuum Code`, Urban_cat = ifelse(`2013 Rural-urban Continuum Code`%in% c("1","2","3"), "Urban", "Rural"))
+finc <- finc %>%
+  mutate(`Rural-urban Continuum Code`, Urban_cat = ifelse(`Rural-urban Continuum Code`%in% c("1","2","3"), "Urban", "Rural"))
 
-STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
+finc <- finc %>%
   mutate(Greater15pc_change_FI_Diff = if_else(`FI_PC_Change`< 10, "0", "1"))
 
-STAT_198_Food_Security_Dataset <- STAT_198_Food_Security_Dataset %>%
-  mutate(`x100 2019 FI Percent` = `2019 FI Percent`* 100) %>%
-  mutate(`x100 2021 FI Percent` = `2021 FI Percentage`* 100)
+finc <- finc %>%
+  mutate(`x100 FI 2019 Percent` = `FI 2019 Percent`* 100) %>%
+  mutate(`x100 2021 FI Percent` = `2021 FI Percent`* 100)
 
-STAT_198_Food_Security_Dataset$Greater15pc_change_FI_Diff <- as_factor(STAT_198_Food_Security_Dataset$Greater15pc_change_FI_Diff)
+finc$Greater15pc_change_FI_Diff <- as_factor(finc$Greater15pc_change_FI_Diff)
 ```
 
 # Background and Research Questions, and Data Sources
@@ -44,27 +44,43 @@ This project's motivating research questions are the following:
 
 Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?
 
-To what extent are the following variables able to predict North Carolinian food insecurity rates and the rate's change from 2019 to 2021: unemployment, meal price, education level, and degree of urbanization?
+To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa?
 
+Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables detailed above able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?
 
-Our data directly related to food insecurity and employment, as well as employment, in North Carolinian Counties in 2019 (generally referred to as "pre-COVID") and 2021 (generally referred to as "post-COVID") was sourced from Feeding America, the United States’ largest hunger relief organization, that compiles national, state, and local data on food insecurity as a part of the organization’s “Map the Meal Gap” and “Coronavirus and Food Security” Research Initiatives. Feeding America Data was sourced from here: https://www.feedingamerica.org/research/map-the-meal-gap/by-county
+Data directly related to food insecurity and change in employment in North Carolinian Counties in 2019 (generally referred to as "pre-COVID") and 2021 (generally referred to as "post-COVID") was sourced from Feeding America, the United States’ largest hunger relief organization, that compiles national, state, and local data on food insecurity as a part of the organization’s “Map the Meal Gap” and “Coronavirus and Food Security” Research Initiatives. Feeding America Data was sourced from here: https://www.feedingamerica.org/research/map-the-meal-gap/by-county
 
-Our data related to education level and urbanization in North Carolinian counties was sourced from the USDA’s Economic Research Service and the results of the American Community Survey from 2015 to 2019. USDA Economic Research Service Data was sourced from here: https://www.ers.usda.gov/data-products/county-level-data-sets/download-data/
+Data related to urbanization categories for North Carolinian counties was sourced from the USDA’s Economic Research Service and the results of the American Community Survey from 2015 to 2019. USDA Economic Research Service Data was sourced from here: https://www.ers.usda.gov/data-products/county-level-data-sets/download-data/
 
-The results for these variables for each North Carolinian county were combined into one Excel sheet and programmed for use in R.
+Data directly related to education levels and level of broadband internet at home in North Carolinian counties were sourced from My Future NC, a nonprofit intended to measure and provide policy recommendations related to educational attainments in North Carolina. My Future NC was sourced from here: https://dashboard.myfuturenc.org/county-data-and-resources/   
 
-# Exploratory Data Analysis and Statistical Investigation Methodology
+The results for these variables for each North Carolinian county were combined into one Excel sheet, as well as one variable where counties were manually coded for each of the three North Carolina Regions it falls into -- Coastal Plains, Piedmont, and Mountains (sourced here: https://www.ncpedia.org/geography/counties); this complete dataset was loaded into R for analysis.
+
+# Dataset Glimpse
+```{r glimpse-data, echo=FALSE}
+glimpse(finc_glimpse)
+```
+
+# Exploratory Data Analysis and Investigation Methodology
 
 In order to investigate the first research question, a plot was constructed to determine the extent to explore the numerical, as well as geographic, distribution of the Percent Change in Food Insecurity in North Carolina, as well as the distribution of the Percent Change in Child Food Insecurity in North Carolina by county, both from 2019 to 2021.
 
 ```{r early-visual-1, message = FALSE, warning = FALSE, echo = FALSE}
 nc <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE) %>%
 rename(County = NAME)
-nc_plot <- STAT_198_Food_Security_Dataset %>%
+nc_plot <- finc %>%
 full_join(nc)
 
 ggplot(data = nc_plot) +
-  geom_sf(aes(fill= `2019-2021 FI Percent Change`, geometry = geometry)) +
+  geom_sf(aes(fill= `FI_PC_Change`, color = Region, geometry = geometry)) +
+  labs(title = "Food Insecurity in NC Counties: 2019 to 2021") +
+scale_fill_continuous(low = "yellow", high = "red", name = "Percent Difference in Food 
+Security: 2019 to 2021", label = scales::comma) + 
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+ggplot(data = nc_plot) +
+  geom_sf(aes(fill= `x100 2021 FI Percent`, color = Region, geometry = geometry)) +
   labs(title = "Food Insecurity in NC Counties: 2019 to 2021") +
 scale_fill_continuous(low = "yellow", high = "red", name = "Percent Difference in Food 
 Security: 2019 to 2021", label = scales::comma) + 
@@ -77,17 +93,25 @@ Being able to explore the percent change in food insecurity for the counties in 
 
 To investigate the differences in 2019 and 2021 Food Insecurity Percent Changes, a 1 Sample 2-Sided T-Test was run on two different variables: a paired variable that was the difference in 2021 from 2019 Food Insecurity Data per county, and a variable that calculated percent change per county from 2019 to 2021 based on the paired percent difference variable. A 95% Confidence Interval for the true percent difference and percent change in food insecurity rates for North Carolina counties will be obtained from running this test as well.
 
-To further investigate the impact of other variables to food insecurity rates and change in food insecurity rates, a linear regression model was fit in order to model the following formula: $$\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1(meal_i) + \hat{\beta}_2(urban_i) + \hat{\beta}_3({\Delta}unemp_i) + \hat{\beta}_4(<hsdip_i) + 
-\hat{\beta}_5({=}hsdip) + \hat{\beta}_6(somecollege) + \hat{\beta}_7(degree)$$
+To further investigate the impact of other variables to food insecurity rates and change in food insecurity rates, two linear regression model will be fit in order to model the following: $$\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1(meal_i) + \hat{\beta}_2(urban_i) + \hat{\beta}_3({\Delta}unemp_i) + \hat{\beta}_4(<hs_i) + 
+\hat{\beta}_5({=}hs) + \hat{\beta}_6(somecollege) + \hat{\beta}_7(degree)$$
+$$+ \hat{\beta}_8(hhincome) + \hat{\beta}_9(region) + \hat{\beta}_{10}(internet) + \hat{\beta}_{11}(hispanic) + \hat{\beta}_{12}(white)$$
+Where the response variable for one linear regression model is food insecurity rates in 2021 and the other is the change in food insecurity in North Carolinian counties from 2019 to 2021.
+
+The residual plot and R^2 Adjusted Term will be determined for both linear regressions as well in order to confirm that there are not any irregularities with the regression that hinders the model's validity. Any concerns will warrant further investigation
+
+Once a valid linear regression is fitted for both response variables, significant predictor variables based on p-values and confidence intervals will be isolated and intepreted in context. Those that are deemed based on the linear regression to be significant will be fitted on a new single linear regression and interaction terms among these ramining variables will be assessed to determine greater fit based upon the R^2 adjusted calculation yielded.
+
+Regardless of statistical significance of particular variables in the above term, it is also of interest to explore
 
 # T-test
 
 ```{r run t-tests, message = FALSE, warning = FALSE, echo = FALSE}
-t.test(STAT_198_Food_Security_Dataset$FI_Diff, mu=0) %>%
+t.test(finc$FI_Diff, mu=0) %>%
   tidy() %>%
 knitr::kable(caption= "1 Sample Paired 2-Sided T-Test Testing Null Hypothesis of a True Percent Difference from 2019 to 2021 Food Insecurity Rates for NC Counties  = 0")
 
-t.test(STAT_198_Food_Security_Dataset$FI_PC_Change, mu=0) %>%
+t.test(finc$FI_PC_Change, mu=0) %>%
   tidy() %>%
 knitr::kable(caption= "1 Sample 2-Sided T-Test Testing Null Hypothesis of a True Percent Change from 2019 to 2021 Food Insecurity Rates for NC Counties, Calculated from Feeding America  = 0")
 ```
@@ -95,60 +119,52 @@ knitr::kable(caption= "1 Sample 2-Sided T-Test Testing Null Hypothesis of a True
 # Linear Regression Investigation- 2021
 
 ```{r run_regression_0, message = FALSE, warning = FALSE, echo = FALSE}
-FI2021_cost_rural_education <- linear_reg() %>%
+
+finc$Region=as.factor(finc$Region)
+
+finc$Region=relevel(finc$Region, ref = "Piedmont")
+
+finc_linear_1 <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(`2019-2021 FI Percent Change` ~ `2019 Cost per Meal` + `Urban_cat` + `2019-2021 Unemployment Change` + `Less than HS Diploma, 2015-9, Percent` + `Only HS Diploma, 2015-9, Percent` + `Some College Education Completed, 2015-9, Percent` + `College Degree Obtained, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+  fit(`FI_PC_Change` ~ `2019 Cost per Meal` + `Urban_cat` + `Unemployment Change` + `Percent Less than HS` + `HS or GED` + `Some College, No Degree` + `Household Income` + `Region` + `Percent Broadband Internet at Home` + `Hispanic` + `Percent non-Hispanic White`, data = finc)
 
-FI2021_cost_rural_education %>% tidy(conf.int=TRUE) %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina Using Cost of Meal, Unemployment Change from 2019-21, Urban/Rural County Status, and Education Status of County Residents")
+finc_linear_1 %>% tidy(conf.int=TRUE) %>% knitr::kable(caption="R-Squared-Adjusted Value for Main Linear Regression of Food Insecurity Change in North Carolina, 2019-2021")
 
-glance(FI2021_cost_rural_education)$adj.r.squared
-```
+glance(finc_linear_1)$adj.r.squared %>% tidy() %>% knitr::kable(caption="R-Squared-Adjusted Value for Main Linear Regression of Food Insecurity Change in North Carolina, 2019-2021")
 
-```{r run_regression_1, message = FALSE, warning = FALSE, echo = FALSE}
-FI2021_cost_rural_lesshsdiploma <- linear_reg() %>%
+finc_linear_1_aug <- augment(finc_linear_1$fit)
+ggplot(finc_linear_1_aug, mapping = aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
+  labs(x = "2019 to 2021 Food Inscurity Percent Change by NC County", 
+       y = "Residuals", 
+       title = "Residuals of Linear Regression for 2019 to 2021 
+Food Inscurity Percent Change by NC County")
+
+
+finc_linear_2 <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` + `Urban_cat` + `Less than HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
+  fit(`2021 FI Percent` ~ `2019 Cost per Meal` + `Urban_cat` + `Unemployment Change` + `Percent Less than HS` + `HS or GED` + `Some College, No Degree` + `Household Income` + `Region` + `Percent Broadband Internet at Home` + `Hispanic` + `Percent non-Hispanic White`, data = finc)
 
-FI2021_cost_rural_lesshsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina Using Cost of Meal, Urban/Rural County Status, and Percent of County Residents with Less than a High School Diploma")
+finc_linear_2 %>% tidy(conf.int=TRUE) %>% knitr::kable(caption="R-Squared-Adjusted Value for Main Linear Regression of Food Insecurity Rates in North Carolina, 2021")
 
-glance(FI2021_cost_rural_lesshsdiploma)$adj.r.squared
-```
+glance(finc_linear_2)$adj.r.squared %>% tidy() %>% knitr::kable(caption="R-Squared-Adjusted Value for Main Linear Regression of Food Insecurity Rates in North Carolina, 2021")
 
-```{r run_regression_2, message = FALSE, warning = FALSE, echo = FALSE}
-FI2021_costandrural_lesshsdiploma <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` * `Urban_cat` + `Less than HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
-
-FI2021_costandrural_lesshsdiploma %>% tidy() %>% knitr::kable(caption="Interaction Linear Regression of Food Security in North Carolina Using Cost of Meal and Urban/Rural County Status to Percent of County Residents with Less than a High School Diploma")
-
-glance(FI2021_costandrural_lesshsdiploma)$adj.r.squared
-```
-
-```{r run_regression_3, message = FALSE, warning = FALSE, echo = FALSE}
-FI2021_cost_rural_gothsdiploma <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` + `Urban_cat` + `Only HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
-
-FI2021_cost_rural_gothsdiploma %>% tidy() %>% knitr::kable(caption="Main Linear Regression of Food Security in North Carolina Using Cost of Meal, Urban/Rural County Status, and Percent of County Residents with a High School Diploma")
-
-glance(FI2021_cost_rural_gothsdiploma)$adj.r.squared
-```
-
-```{r run_regression_4, message = FALSE, warning = FALSE, echo = FALSE}
-FI2021_costandrural_gothsdiploma <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`2021 FI Percentage` ~ `2019 Cost per Meal` * `Urban_cat` + `Only HS Diploma, 2015-9, Percent`, data = STAT_198_Food_Security_Dataset)
-
-FI2021_costandrural_gothsdiploma %>% tidy() %>% knitr::kable(caption="Interaction Linear Regression of Food Security in North Carolina Using Cost of Meal and Urban/Rural County Status to Percent of County Residents with a High School Diploma")
-
-glance(FI2021_costandrural_gothsdiploma)$adj.r.squared
+finc_linear_2_aug <- augment(finc_linear_2$fit)
+ggplot(finc_linear_2_aug, mapping = aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
+  labs(x = "2019 to 2021 Food Inscurity Percent Change by NC County", 
+       y = "Residuals", 
+       title = "Residuals of Linear Regression for 2019 to 2021 
+Food Inscurity Percent Change by NC County")
 ```
 
 # Logistic Regression
 
 ```{r log_plot, message = FALSE, warning = FALSE, echo = FALSE}
 
-ggplot(STAT_198_Food_Security_Dataset, aes(x = Urban_cat, 
+ggplot(finc, aes(x = Urban_cat, 
                   fill = Greater15pc_change_FI_Diff)) +
   geom_bar(position = "fill") +
   labs (
@@ -163,7 +179,7 @@ During Pandemic",
 In Pandemic and Rural/Urban Status",
 )
 
-ggplot(STAT_198_Food_Security_Dataset, aes(x = `x100 2019 FI Percent`, y = `x100 2021 FI Percent`, color = Urban_cat)) +
+ggplot(finc, aes(x = `x100 FI 2019 Percent`, y = `x100 2021 FI Percent`, color = Urban_cat)) +
   geom_point() +
   labs(
     title = "Food Insecurity by North Carolina County: 2019 to 2021",
@@ -176,7 +192,7 @@ ggplot(STAT_198_Food_Security_Dataset, aes(x = `x100 2019 FI Percent`, y = `x100
 
 fs_percentchange_1_fit <- logistic_reg() %>%
   set_engine("glm") %>%
-  fit(Greater15pc_change_FI_Diff ~ Urban_cat, data = STAT_198_Food_Security_Dataset, family = "binomial")
+  fit(Greater15pc_change_FI_Diff ~ Urban_cat, data = finc, family = "binomial")
 tidy(fs_percentchange_1_fit,conf.int=TRUE) %>%
   mutate(
     odds = exp(estimate),
