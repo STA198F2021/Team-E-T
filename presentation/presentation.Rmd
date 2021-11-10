@@ -1,7 +1,7 @@
 ---
-title: "Presentation title"
+title: "Investigating COVID-19's Impact on Food Insecurity Rates in North Carolina"
 subtitle: "Presentation subtitle (if any)"
-author: "Team name <br> Names of team members"
+author: "Team E.T. <br> Elaijah Lapay"
 institute: "Duke University"
 date: "`r Sys.Date()`"
 output:
@@ -23,6 +23,7 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(xaringan)
 ```
 
 ```{r setup, include=FALSE}
