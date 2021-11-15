@@ -1,6 +1,6 @@
 ---
-title: "Investigating COVID-19's Impact on Food Insecurity Rates in North Carolina"
-subtitle: "Presentation subtitle (if any)"
+title: "Data Hungry"
+subtitle: "Investigating COVID-19's Impact on Food Insecurity Rates in North Carolina"
 author: "Team E.T. <br> Elaijah Lapay"
 institute: "Duke University"
 date: "`r Sys.Date()`"
@@ -50,22 +50,54 @@ style_xaringan(
 
 class: inverse, middle, center
 
-# Using xaringan
+# Background and Research Questions
 
 ---
 
-## xaringan
+## Food Insecurity
 
-- The presentation is created using the `xaringan` package
-
-- Use `---` to separate slides and `--` for incremental builds
+- Food insecurity is defined by the Food and Agriculture Organization of the United Nations as lack of "regular access to enough safe and nutritious food for normal growth and development and for an active and healthy life."
 
 --
 
-- Like this
+- Project inspired by a desire to investigate COVID-19's impact on Food Security in North Carolina, a growing and diversifying state that serves as a pertinent case study to the factors impacting multiple dimensions of food insecurity rates
 
+```{r maps, echo = FALSE, out.width = "125%", fig.align = "center"}
+include_graphics("img/finc_maps.png")
+```
 ---
 
+## Research Questions
+
+- Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?
+
+- To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant?
+
+- Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables of urban/rural status and NC Region able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?
+
+---
+## T-Test Exploration
+
+
+---
+## Linear Regression Exploration
+```{r boxplots, echo = FALSE, out.width = "125%", fig.align = "center"}
+include_graphics("img/finc_boxplots.png")
+```
+
+$$\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1(meal_i) + \hat{\beta}_2(urban_i) + \hat{\beta}_3({\Delta}unemp_i) + \hat{\beta}_4(<hs_i) + 
+\hat{\beta}_5({=}hs) + \hat{\beta}_6(somecollege) + \hat{\beta}_7(degree)$$
+$$+ \hat{\beta}_8(hhincome) + \hat{\beta}_9(region) + \hat{\beta}_{10}(internet) + \hat{\beta}_{11}(hispanic) + \hat{\beta}_{12}(white)$$
+
+---
+## Logistic Regression Exploration
+```{r stacked, echo = FALSE, out.width = "50%", fig.align = "center"}
+include_graphics("img/finc_stacked.png")
+```
+
+$$\log(\frac{\pi_i}{1-\pi_i}) = \hat{\beta}_0 + \hat{\beta}_1(urban_i) + \hat{\beta}_2(region_i) $$
+
+---
 ## Layouts
 
 You can use plain text
