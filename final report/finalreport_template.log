@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.10.18)  14 NOV 2021 23:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.10.18)  16 NOV 2021 00:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -368,7 +368,7 @@ File: l3backend-pdftex.def 2021-10-17 L3 backend support: PDF output (pdfTeX)
 )
 
 LaTeX Warning: Unused global option(s):
-    [8pt].
+    [9pt].
 
 (./finalreport_template.aux)
 \openout1 = `finalreport_template.aux'.
@@ -426,14 +426,14 @@ LaTeX Info: Redefining \nameref on input line 89.
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(28.45274pt, 557.38951pt, 28.45274pt)
-* v-part:(T,H,B)=(14.22636pt, 723.83812pt, 56.9055pt)
+* v-part:(T,H,B)=(28.45274pt, 709.61174pt, 56.9055pt)
 * \paperwidth=614.295pt
 * \paperheight=794.96999pt
 * \textwidth=557.38951pt
-* \textheight=723.83812pt
+* \textheight=709.61174pt
 * \oddsidemargin=-43.81725pt
 * \evensidemargin=-43.81725pt
-* \topmargin=-95.04362pt
+* \topmargin=-80.81725pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
@@ -493,74 +493,64 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 141.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 141.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-66.
-(/home/guest/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [1
+[1
 
 {/home/guest/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<finc_maps.png, id=48, 1453.68094pt x 350.81062pt>
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+68.
+(/home/guest/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+<finc_maps.png, id=47, 1453.68094pt x 350.81062pt>
 File: finc_maps.png Graphic file (type png)
 <use finc_maps.png>
-Package pdftex.def Info: finc_maps.png  used on input line 198.
+Package pdftex.def Info: finc_maps.png  used on input line 200.
 (pdftex.def)             Requested size: 557.39531pt x 134.51382pt.
 [2 <./finc_maps.png>]
-<finc_boxplots.png, id=60, 1190.19656pt x 414.79968pt>
+<finc_boxplots.png, id=61, 1190.19656pt x 414.79968pt>
 File: finc_boxplots.png Graphic file (type png)
 <use finc_boxplots.png>
-Package pdftex.def Info: finc_boxplots.png  used on input line 259.
+Package pdftex.def Info: finc_boxplots.png  used on input line 261.
 (pdftex.def)             Requested size: 557.3766pt x 194.25333pt.
-<finc_stacked.png, id=61, 735.49782pt x 505.13719pt>
-File: finc_stacked.png Graphic file (type png)
-<use finc_stacked.png>
-Package pdftex.def Info: finc_stacked.png  used on input line 284.
-(pdftex.def)             Requested size: 362.30496pt x 248.82971pt.
-[3 <./finc_boxplots.png>] [4 <./finc_stacked.png>]
-<finc_residuals.png, id=73, 1183.42125pt x 405.76593pt>
+<finc_2stacked.png, id=62, 1315.16344pt x 409.53pt>
+File: finc_2stacked.png Graphic file (type png)
+<use finc_2stacked.png>
+Package pdftex.def Info: finc_2stacked.png  used on input line 286.
+(pdftex.def)             Requested size: 557.40189pt x 173.5699pt.
+[3 <./finc_boxplots.png>] [4 <./finc_2stacked.png>]
+<finc_residuals.png, id=74, 1183.42125pt x 405.76593pt>
 File: finc_residuals.png Graphic file (type png)
 <use finc_residuals.png>
-Package pdftex.def Info: finc_residuals.png  used on input line 377.
+Package pdftex.def Info: finc_residuals.png  used on input line 378.
 (pdftex.def)             Requested size: 557.39987pt x 191.11865pt.
-[5 <./finc_residuals.png>] [6] [7]
-Overfull \hbox (14.85883pt too wide) in paragraph at lines 734--734
-[]\T1/lmtt/m/n/10 ## Table: Findings of Significant Findings of ANOVA of Food I
-nsecurity Rates in North Carolina Counties, 2021[] 
- []
-
-[8]
-Overfull \hbox (41.10875pt too wide) in paragraph at lines 757--757
-[]\T1/lmtt/m/n/10 ## Table: Findings of Significant Findings of ANOVA of Food I
-nsecurity Percent Change in North Carolina, 2019-2021[] 
- []
-
-[9] (./finalreport_template.aux)
+[5 <./finc_residuals.png>] [6] [7] [8] [9] (./finalreport_template.aux)
 Package rerunfilecheck Info: File `finalreport_template.out' has not changed.
-(rerunfilecheck)             Checksum: 5138148FC007B0F1EF25A3F0AB50B7C4;1362.
+(rerunfilecheck)             Checksum: BE501C6CF448235D9A405BDFC760364B;1387.
  ) 
 Here is how much of TeX's memory you used:
- 10768 strings out of 480559
- 154741 string characters out of 5903298
- 477846 words of memory out of 5000000
- 28175 multiletter control sequences out of 15000+600000
- 443041 words of font info for 64 fonts, out of 8000000 for 9000
+ 10770 strings out of 480559
+ 154784 string characters out of 5903298
+ 476078 words of memory out of 5000000
+ 28176 multiletter control sequences out of 15000+600000
+ 446036 words of font info for 65 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,6n,66p,390b,469s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,6n,66p,390b,395s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/home/guest/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/gues
 t/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/home/guest/.TinyTeX/te
 xmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/guest/.TinyTeX/texmf-dist/fonts/en
 c/dvips/lm/lm-ec.enc}</home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmb
-x12.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></hom
-e/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/guest/.TinyT
-eX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/guest/.TinyTeX/texmf-dist/
-fonts/type1/public/lm/lmr12.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/pu
-blic/lm/lmr17.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.p
-fb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/gue
-st/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on finalreport_template.pdf (9 pages, 532212 bytes).
+x10.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></hom
+e/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/guest/.Tiny
+TeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/guest/.TinyTeX/texmf-dist
+/fonts/type1/public/lm/lmr10.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/p
+ublic/lm/lmr12.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17
+.pfb></home/guest/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/gue
+st/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/guest/.TinyTeX/t
+exmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on finalreport_template.pdf (9 pages, 602764 bytes).
 PDF statistics:
- 158 PDF objects out of 1000 (max. 8388607)
- 122 compressed objects within 2 object streams
+ 163 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
  31 named destinations out of 1000 (max. 500000)
  77 words of extra memory for PDF output out of 10000 (max. 10000000)
 

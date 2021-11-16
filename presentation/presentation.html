@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Data Hungry</title>
+    <title>Who’s (Still) Hungry in the Tar Heel State?</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Team E.T.   Elaijah Lapay" />
-    <meta name="date" content="2021-11-14" />
+    <meta name="author" content="Elaijah Lapay" />
+    <meta name="date" content="2021-11-16" />
     <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -12,15 +12,33 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Data Hungry
+# Who’s (Still) Hungry in the Tar Heel State?
 ## Investigating COVID-19’s Impact on Food Insecurity Rates in North Carolina
-### Team E.T. <br> Elaijah Lapay
+### Elaijah Lapay
 ### Duke University
-### 2021-11-14
+### 2021-11-16
 
 ---
 
 
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+  font-size: 16px;
+  padding: 10px 40px 10px 40px;
+}
+.remark-code, .remark-inline-code {
+  background: #f0f0f0;
+}
+.remark-code {
+  font-size: 16px;
+}
+.huge .remark-code { /*Change made here*/
+  font-size: 24px !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 12px !important;
+}
+&lt;/style&gt;
 
 
 
@@ -29,261 +47,270 @@ class: center, middle, inverse, title-slide
 
 
 
-class: inverse, middle, center
-
-# Background and Research Questions
-
----
 
 ## Food Insecurity
 
 - Food insecurity is defined by the Food and Agriculture Organization of the United Nations as lack of "regular access to enough safe and nutritious food for normal growth and development and for an active and healthy life."
 
---
-
 - Project inspired by a desire to investigate COVID-19's impact on Food Security in North Carolina, a growing and diversifying state that serves as a pertinent case study to the factors impacting multiple dimensions of food insecurity rates
 
+
 &lt;img src="img/finc_maps.png" width="125%" style="display: block; margin: auto;" /&gt;
+
 ---
 
 ## Research Questions
-
+.huge[
 - Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?
 
 - To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant?
 
 - Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables of urban/rural status and NC Region able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?
+]
+---
+
+## Research Questions
+
+- Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change? -&gt; T-Test
+
+- To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant? -&gt; Linear Regression
+
+- Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables of urban/rural status and NC Region able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period? -&gt; Logistic Regression
 
 ---
-## T-Test Exploration
 
+## Dataset Glimpse
+
+
+```
+## Rows: 100
+## Columns: 16
+## $ County                               &lt;chr&gt; "Alamance", "Alexander", "Allegha…
+## $ `FI 2019 Percent`                    &lt;dbl&gt; 0.137, 0.143, 0.185, 0.145, 0.154…
+## $ `2021 FI Percent`                    &lt;dbl&gt; 0.153, 0.160, 0.193, 0.164, 0.165…
+## $ `FI Percent Change`                  &lt;dbl&gt; 11, 12, 5, 14, 7, 7, 7, 7, 7, 10,…
+## $ `Unemployment Change`                &lt;dbl&gt; 2.1, 2.3, 0.7, 2.9, 1.2, 1.3, 1.2…
+## $ `2019 Cost per Meal`                 &lt;dbl&gt; 3.15, 2.92, 2.83, 2.84, 2.92, 3.0…
+## $ `Rural-urban Continuum Code`         &lt;dbl&gt; 3, 2, 9, 6, 7, 8, 6, 7, 6, 2, 2, …
+## $ Hispanic                             &lt;dbl&gt; 13.9, 5.8, 13.5, 5.1, 7.2, 6.7, 9…
+## $ `Percent non-Hispanic White`         &lt;dbl&gt; 63.6, 86.2, 83.6, 43.2, 90.4, 87.…
+## $ `Percent Minority`                   &lt;dbl&gt; 36.4, 13.8, 16.4, 56.8, 9.6, 12.6…
+## $ `Percent Broadband Internet at Home` &lt;dbl&gt; 0.7594717, 0.6974931, 0.7056469, …
+## $ `Percent Less than HS`               &lt;dbl&gt; 0.15365298, 0.15333406, 0.2792540…
+## $ `HS or GED`                          &lt;dbl&gt; 0.2338839, 0.4032522, 0.2899767, …
+## $ `Some College, No Degree`            &lt;dbl&gt; 0.2616890, 0.1864018, 0.2400932, …
+## $ `Household Income`                   &lt;dbl&gt; 50480, 49138, 39735, 38023, 41864…
+## $ Region                               &lt;chr&gt; "Piedmont", "Piedmont", "Mountain…
+```
 
 ---
+## T-Test Setup
+
+- **Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?**
+
+- 1 Sample 2-Sided T-Test was run on two different variables: a paired variable that was the **difference in 2021 from 2019 Food Insecurity Data per county**, and a derived variable that calculated **percent change**, or difference divided by the 2019 rate, per county from 2019 to 2021 based on the paired percent difference variable. 
+
+- A 95% Confidence Interval for the true percent difference and percent change in food insecurity rates for North Carolina counties calculated. 
+
+- The following null hypothesis was used: `\(H_0: \mu_{2019} = \mu_{2021}\)`, versus `\(H_A: \mu_{2019} \neq \mu_{2021}\)`
+
+---
+## T-Test: Difference in Food Insecurity Rates
+
+
+Table: 1 Sample Paired 2-Sided T-Test Testing Null Hypothesis of a True Percent Difference from 2019 to 2021 Food Insecurity Rates for NC Counties
+
+| estimate| statistic| p.value| parameter| conf.low| conf.high|method            |alternative |
+|--------:|---------:|-------:|---------:|--------:|---------:|:-----------------|:-----------|
+|    1.415|  34.48568|       0|        99| 1.333585|  1.496415|One Sample t-test |two.sided   |
+
+- There is evidence to suggest that there was a statistically significant difference in food insecurity rates between 2019 and 2021 reports paired by county. This t-test yielded an estimate of the percent difference in food insecurity rates from 2019 in 2021 in North Carolinian counties to be 1.415 (95% CI: (1.33358, 1.49642)) percent.
+
+---
+
+## T-Test: Difference in Food Insecurity Rate Percent Change
+
+
+Table: 1 Sample 2-Sided T-Test Testing Null Hypothesis of a True Percent Change from 2019 to 2021 Food Insecurity Rates for NC Counties
+
+| estimate| statistic| p.value| parameter| conf.low| conf.high|method            |alternative |
+|--------:|---------:|-------:|---------:|--------:|---------:|:-----------------|:-----------|
+| 9.706158|  33.22406|       0|        99| 9.126484|  10.28583|One Sample t-test |two.sided   |
+
+- There is evidence to suggest that there was a statistically significant difference in food insecurity percent changes between 2019 and 2021 reports for each NC county. This t-test yielded an estimate of the percent change in food insecurity rates from 2019 in 2021 in North Carolinian counties to be a percent increase of 9.706158 (95% CI: (9.126484, 10.28583)) percent.
+
+---
+
 ## Linear Regression Exploration
-&lt;img src="img/finc_boxplots.png" width="125%" style="display: block; margin: auto;" /&gt;
 
+- **To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant?**
+
+- Further Exploration with only statistically significant Predictor Variables and Interaction Effects on two variables that raises the `\(R^2\)` value the highest
+
+&lt;img src="img/finc_boxplots.png" width="90%" style="display: block; margin: auto;" /&gt;
+---
+
+## Linear Regression Model Equation
+
+-Regression Model:
 `$$\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1(meal_i) + \hat{\beta}_2(urban_i) + \hat{\beta}_3({\Delta}unemp_i) + \hat{\beta}_4(&lt;hs_i) + 
 \hat{\beta}_5({=}hs) + \hat{\beta}_6(somecollege) + \hat{\beta}_7(degree)$$`
 `$$+ \hat{\beta}_8(hhincome) + \hat{\beta}_9(region) + \hat{\beta}_{10}(internet) + \hat{\beta}_{11}(hispanic) + \hat{\beta}_{12}(white)$$`
+---
+
+## Linear Regression Results: Percent Change
+
+
+Table: Findings of Main Linear Regression of Food Insecurity Change in North Carolina, 2019-2021
+
+|term                                 |   estimate|   p.value|   conf.low|  conf.high|
+|:------------------------------------|----------:|---------:|----------:|----------:|
+|(Intercept)                          |  0.6376683| 0.7796944| -3.8794365|  5.1547731|
+|`2019 Cost per Meal`                 | -0.1971380| 0.6272190| -1.0011060|  0.6068299|
+|Urban_catRural                       | -0.4624725| 0.0141958| -0.8297684| -0.0951767|
+|`Unemployment Change`                |  2.9396705| 0.0000000|  2.6982667|  3.1810744|
+|`Percent Less than HS`               | -3.5499558| 0.0952161| -7.7328694|  0.6329577|
+|`HS or GED`                          |  2.1744952| 0.3059154| -2.0221043|  6.3710946|
+|`Some College, No Degree`            | -1.5729023| 0.4416868| -5.6179083|  2.4721036|
+|`Household Income`                   |  0.0001046| 0.0000000|  0.0000724|  0.0001368|
+|RegionMountains                      | -0.1261689| 0.6462830| -0.6707002|  0.4183623|
+|RegionCoastal Plains                 | -0.6595482| 0.0015086| -1.0595938| -0.2595027|
+|`Percent Broadband Internet at Home` |  1.6566169| 0.2886499| -1.4275666|  4.7408004|
+|Hispanic                             |  0.0231297| 0.2600221| -0.0174203|  0.0636797|
+|`Percent non-Hispanic White`         | -0.0193167| 0.0039215| -0.0322718| -0.0063615|
 
 ---
-## Logistic Regression Exploration
-&lt;img src="img/finc_stacked.png" width="50%" style="display: block; margin: auto;" /&gt;
 
+## Linear Regression Extended Results: Percent Change
+
+
+Table: Findings: Interaction Linear Regression of Food Insecurity Rates by NC County, 2021
+
+|term                                     |   estimate|   p.value|   conf.low|  conf.high|
+|:----------------------------------------|----------:|---------:|----------:|----------:|
+|(Intercept)                              |  3.8322179| 0.0000305|  2.0976440|  5.5667917|
+|Urban_catRural                           | -0.1383902| 0.3958470| -0.4605928|  0.1838124|
+|`Percent non-Hispanic White`             | -0.0123198| 0.0132070| -0.0220020| -0.0026376|
+|`Household Income`                       |  0.0000182| 0.3220790| -0.0000181|  0.0000545|
+|`Unemployment Change`                    |  0.3483228| 0.4392712| -0.5422561|  1.2389017|
+|RegionMountains                          | -0.2480498| 0.2350151| -0.6601805|  0.1640809|
+|RegionCoastal Plains                     | -0.4125100| 0.0126197| -0.7345294| -0.0904906|
+|`Household Income`:`Unemployment Change` |  0.0000629| 0.0000000|  0.0000424|  0.0000835|
+
+`\(R^2\)` Value: Main
+
+```
+## [1] 0.9439508
+```
+
+`\(R^2\)` Value: Interaction
+
+```
+## [1] 0.9591522
+```
+
+---
+
+## Linear Regression Results: 2021 Food Insecurity Rate
+
+
+Table: Findings Main Linear Regression of Food Insecurity Rates by NC County, 2021
+
+|term                                 |   estimate|   p.value|   conf.low|  conf.high|
+|:------------------------------------|----------:|---------:|----------:|----------:|
+|(Intercept)                          | 23.9084777| 0.0000000| 18.0271961| 29.7897593|
+|`2019 Cost per Meal`                 | -0.3607857| 0.4951263| -1.4075540|  0.6859825|
+|Urban_catRural                       |  0.1457328| 0.5462884| -0.3324873|  0.6239529|
+|`Unemployment Change`                |  0.6459854| 0.0000977|  0.3316770|  0.9602938|
+|`Percent Less than HS`               |  6.5672760| 0.0186816|  1.1211122| 12.0134398|
+|`HS or GED`                          | -4.1745706| 0.1324979| -9.6385535|  1.2894123|
+|`Some College, No Degree`            |  2.0868413| 0.4330886| -3.1797664|  7.3534490|
+|`Household Income`                   | -0.0001371| 0.0000000| -0.0001790| -0.0000952|
+|RegionMountains                      |  0.4852354| 0.1772354| -0.2237456|  1.1942164|
+|RegionCoastal Plains                 |  0.6780321| 0.0113306|  0.1571718|  1.1988923|
+|`Percent Broadband Internet at Home` | -3.4618875| 0.0901763| -7.4775021|  0.5537270|
+|Hispanic                             | -0.0184008| 0.4903239| -0.0711969|  0.0343954|
+|`Percent non-Hispanic White`         |  0.0132997| 0.1207026| -0.0035679|  0.0301674|
+
+---
+
+## Linear Regression Results Extended: 2021 Food Insecurity Rate
+
+
+Table: Findings: Interaction Linear Regression of Food Insecurity Rates by NC County, 2021
+
+|term                                     |   estimate|   p.value|   conf.low|  conf.high|
+|:----------------------------------------|----------:|---------:|----------:|----------:|
+|(Intercept)                              | 19.8646147| 0.0000000| 17.0530758| 22.6761536|
+|`Unemployment Change`                    |  1.6514147| 0.0134198|  0.3503687|  2.9524606|
+|`Household Income`                       | -0.0001124| 0.0000747| -0.0001662| -0.0000586|
+|`Percent Less than HS`                   |  5.7632195| 0.0090830|  1.4684194| 10.0580197|
+|RegionMountains                          |  0.7538352| 0.0103388|  0.1819331|  1.3257373|
+|RegionCoastal Plains                     |  0.4976152| 0.0415482|  0.0194639|  0.9757665|
+|`Unemployment Change`:`Household Income` | -0.0000261| 0.0786926| -0.0000552|  0.0000030|
+
+`\(R^2\)` Value: Main
+
+```
+## [1] 0.8074312
+```
+
+`\(R^2\)` Value: Interaction
+
+```
+## [1] 0.811756
+```
+
+---
+
+## Logistic Regression Exploration
+
+- **If there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables detailed above able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?**
+
+- A logistic regression model was developed to follow the following where `urban` refers to a binary urban or non-urban, while `region` refers to a categorical variable with three levels and the Piedmont Region as the referent group.
+
+&lt;img src="img/finc_2stacked.png" width="125%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Logistic Regression Model Equation
+
+- Regression Model:
 $$\log(\frac{\pi_i}{1-\pi_i}) = \hat{\beta}_0 + \hat{\beta}_1(urban_i) + \hat{\beta}_2(region_i) $$
 
 ---
-## Layouts
 
-You can use plain text
+## Logistic Regression Results
 
-- or bullet points
 
-.pull-left[
-or text in two columns `\(^*\)`
-]
-.pull-right[
-- like
-- this
-]
 
-.footnote[
-[*] And add footnotes
-]
+Table: Results of Logistic Regression Table Determining Odds 
+of Food Security Change During Pandemic Greater than 10% by Urban-Rural Status
+
+|term                 |      odds|   p.value| conf.low.exp| conf.high.exp|
+|:--------------------|---------:|---------:|------------:|-------------:|
+|(Intercept)          | 9.1777165| 0.0000417|    3.4826995|    29.7225282|
+|Urban_catRural       | 0.2500597| 0.0069972|    0.0882517|     0.6744302|
+|RegionMountains      | 0.0858129| 0.0005011|    0.0195965|     0.3214392|
+|RegionCoastal Plains | 0.0791916| 0.0000194|    0.0227977|     0.2393519|
 
 ---
 
-## Code
+## Big Takeaways
 
+- Using `\(\alpha = 0.05\)`, there is significance to support the conclusion that there was a significant increase in NC county food insecurity rates from 2019 to 2021 of at least 1% and a percent change of at least 9%.
 
-```r
-# a boring regression
-model &lt;- lm(dist ~ speed, data = cars)
-tidy(model)
-```
+- The following variables were found **not** to be a statistically significant predictive impact on neither rates of percent change of food insecurity rates from 2019 to 2021 and rates of food insecurity incurred at the NC county level in 2021: **a 2019 per county cost per meal estimate, the percent of county adults with an educational level at a High School Degree or GED but no more, the percent of county adults with an educational level recognized as some college having been completed, a categorical comparison of NC Mountains County residents to Piedmont residents, the percent of county residents with broadband internet connection at home, and the percent of county residents categorized as "Hispanic".**
 
-```
-## # A tibble: 2 × 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)   -17.6      6.76      -2.60 1.23e- 2
-## 2 speed           3.93     0.416      9.46 1.49e-12
-```
+- The following variables were found to be a statistically significant predictive impact on both rates of percent change of food insecurity rates from 2019 to 2021 and rates of food insecurity incurred at the NC county level in 2021: **Change in County Unemployment Rate from 2019 to 2021, Average County Household Income Estimate, and being in the Coastal Plains vs. Piedmont Region of North Carolina.**
 
-```r
-glance(model)
-```
+- Interaction Terms of **Change in County Unemployment Rate from 2019 to 2021 and Average County Household Income Estimates** lead to a stronger linear regression model.
 
-```
-## # A tibble: 1 × 12
-##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.651         0.644  15.4      89.6 1.49e-12     1  -207.  419.  425.
-## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
-```
+- There is a significantly lower odds of having a percent change in food insecurity rates from 2019 to 2021 of greater than 10% for **rural** counties opposed to urban counties and for **both Coastal Plains and Mountains** Counties opposed to Piedmont Counties
 
 ---
 
-## Plots
-
-
-
-&lt;img src="presentation_files/figure-html/plot-penguins-1.png" title="Body mass vs. flipper lenght of Palmer Penguins for species Adelie and all the others combined together. There is a relatively strong, positive relationship between the two variables. The Adelie penguins are clustered together but they don't exhibit a different trend than the rest of the penguins." alt="Body mass vs. flipper lenght of Palmer Penguins for species Adelie and all the others combined together. There is a relatively strong, positive relationship between the two variables. The Adelie penguins are clustered together but they don't exhibit a different trend than the rest of the penguins." width="70%" /&gt;
-
----
-
-## Plot and text
-
-.pull-left[
-- Some text
-- goes here
-]
-.pull-right[
-&lt;img src="presentation_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
-]
-
----
-
-class: inverse, middle, center
-
-# A new section...
-
----
-
-## Tables
-
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
-
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; species &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; island &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; bill_length_mm &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; bill_depth_mm &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; flipper_length_mm &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; body_mass_g &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; sex &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; year &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 39.1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18.7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 181 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3750 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; male &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 39.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 17.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 186 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3800 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 40.3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 195 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3250 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36.7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 19.3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 193 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3450 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 39.3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 20.6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 190 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3650 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; male &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
----
-
-## Images
-
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/watercolour_sys02_img32_percolate.jpg" alt="Image credit: Danielle Navarro, Percolate." width="40%" /&gt;
-&lt;p class="caption"&gt;Image credit: Danielle Navarro, Percolate.&lt;/p&gt;
-&lt;/div&gt;
-
-Or you can also include a full page image. See next slide.
-
----
-
-background-image: url(img/watercolour_sys02_img32_percolate.jpg)
-
----
-
-## Math Expressions
-
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. &amp;#36;\alpha+\beta$ renders `\(\alpha+\beta\)`. You can use the display style with double dollar signs:
-
-```
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
-
-`$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$`
-
-Limitations:
-
-1. The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-1. There should not be spaces after the opening `$` or before the closing `$`.
-
-1. Math does not work on the title slide (see [#61](https://github.com/yihui/xaringan/issues/61) for a workaround).
-
----
-
-class: inverse, middle, center
-
-# Wrap up
-
----
-
-## Feeling adventurous?
-
-- Want to find out more about `xaringan`? See https://slides.yihui.name/xaringan/#1.
-
-- You are welcomed to use the default styling of the slides. In fact, that's what I expect the majority of you will do. You will differentiate yourself with the content of your presentation.
-
-- But some of you might want to play around with slide styling. The 
-`xaringanthemer` provides some solutions for this that: https://pkg.garrickadenbuie.com/xaringanthemer.
-
-- And if you want more bells and whistles, there is also `xaringanExtra`: https://pkg.garrickadenbuie.com/xaringanExtra.
+## Thank You! :)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
