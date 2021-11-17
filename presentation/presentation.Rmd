@@ -27,10 +27,10 @@ output:
   font-size: 16px;
 }
 .huge .remark-code { /*Change made here*/
-  font-size: 24px !important;
+  font-size: 150% !important;
 }
 .tiny .remark-code { /*Change made here*/
-  font-size: 12px !important;
+  font-size: 50% !important;
 }
 ```
 
@@ -103,36 +103,18 @@ style_xaringan(
 )
 ```
 
-## Food Insecurity
 
-- Food insecurity is defined by the Food and Agriculture Organization of the United Nations as lack of "regular access to enough safe and nutritious food for normal growth and development and for an active and healthy life."
+## Introduction to Food Insecurity in NC
 
-- Project inspired by a desire to investigate COVID-19's impact on Food Security in North Carolina, a growing and diversifying state that serves as a pertinent case study to the factors impacting multiple dimensions of food insecurity rates
+- Food insecurity is defined by the Food and Agriculture Organization of the United Nations as lack of "regular access to enough safe and nutritious food for normal growth and development and for an active and healthy life." (Source: https://www.feedingamerica.org/research/map-the-mealgap/by-county)
 
+- Inspired by a desire to investigate COVID-19's impact on Food Security in North Carolina, a growing and diversifying state that serves as a pertinent case study to the factors impacting multiple dimensions of both **2021 food insecurity rates** and **food insecurity percent change** for North Carolina based on county data
+
+- **T-Test** and **Linear Regression** run based on response variables of 2021 food insecurity rates and food insecurity percent change for North Carolina based on county data and **Logistic Regression** based on derived binary predictor variable of North Carolina counties with a food insecurity rate percent change greater than 10%
 
 ```{r maps, echo = FALSE, out.width = "125%", fig.align = "center"}
 include_graphics("img/finc_maps.png")
 ```
-
----
-
-## Research Questions
-.huge[
-- Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?
-
-- To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant?
-
-- Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables of urban/rural status and NC Region able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?
-]
----
-
-## Research Questions
-
-- Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change? -> T-Test
-
-- To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant? -> Linear Regression
-
-- Finally, if there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables of urban/rural status and NC Region able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period? -> Logistic Regression
 
 ---
 
@@ -143,32 +125,18 @@ glimpse(finc_glimpse)
 ```
 
 ---
-## T-Test Setup
 
-- **Does North Carolina County level data provide evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, and if there is support, what is the magnitude of this change?**
+## T-Test: Food Insecurity Rates from 2019 to 2021
 
-- 1 Sample 2-Sided T-Test was run on two different variables: a paired variable that was the **difference in 2021 from 2019 Food Insecurity Data per county**, and a derived variable that calculated **percent change**, or difference divided by the 2019 rate, per county from 2019 to 2021 based on the paired percent difference variable. 
-
-- A 95% Confidence Interval for the true percent difference and percent change in food insecurity rates for North Carolina counties calculated. 
-
-- The following null hypothesis was used: $H_0: \mu_{2019} = \mu_{2021}$, versus $H_A: \mu_{2019} \neq \mu_{2021}$
-
----
-## T-Test: Difference in Food Insecurity Rates
+- The following null hypothesis was used: $H_0: \pi_{2019} = \pi_{2021}$, versus $H_A: \pi_{2019} \neq \pi_{2021}$
 
 ```{r t-test-1, echo=FALSE}
 t.test(finc$FI_Diff, mu=0) %>%
   tidy() %>%
 knitr::kable(caption= "1 Sample Paired 2-Sided T-Test Testing Null Hypothesis of a True Percent Difference from 2019 to 2021 Food Insecurity Rates for NC Counties")
 
-
 ```
 
-- There is evidence to suggest that there was a statistically significant difference in food insecurity rates between 2019 and 2021 reports paired by county. This t-test yielded an estimate of the percent difference in food insecurity rates from 2019 in 2021 in North Carolinian counties to be 1.415 (95% CI: (1.33358, 1.49642)) percent.
-
----
-
-## T-Test: Difference in Food Insecurity Rate Percent Change
 
 ```{r t-test-2, echo=FALSE}
 t.test(finc$FI_PC_Change, mu=0) %>%
@@ -176,30 +144,25 @@ t.test(finc$FI_PC_Change, mu=0) %>%
 knitr::kable(caption= "1 Sample 2-Sided T-Test Testing Null Hypothesis of a True Percent Change from 2019 to 2021 Food Insecurity Rates for NC Counties")
 ```
 
-- There is evidence to suggest that there was a statistically significant difference in food insecurity percent changes between 2019 and 2021 reports for each NC county. This t-test yielded an estimate of the percent change in food insecurity rates from 2019 in 2021 in North Carolinian counties to be a percent increase of 9.706158 (95% CI: (9.126484, 10.28583)) percent.
+
+- Using $\alpha = 0.05$, there is significance to support the conclusion that there was a significant increase in NC county food insecurity rates from 2019 to 2021 of **at least 1%** and a percent change of **at least 9%**.
 
 ---
 
-## Linear Regression Exploration
+## Linear Regression Exploration and Equation
 
-- **To what extent are the following variables able to predict North Carolinian county-level food insecurity rates and the rate's change from 2019 to 2021: unemployment change from 2019-2021, meal price in 2019, education level, level of broadband internet, race and ethnicity, and degree of urbanization? Are some variables better predictors of rate versus rate change and vice versa? Which variables are not strong predictors at all? Are any statistically but not practically significant?**
-
-- Further Exploration with only statistically significant Predictor Variables and Interaction Effects on two variables that raises the $R^2$ value the highest
-
-```{r boxplots, echo = FALSE, out.width = "90%", fig.align = "center"}
-include_graphics("img/finc_boxplots.png")
-```
----
-
-## Linear Regression Model Equation
-
--Regression Model:
+- Regression Model:
 $$\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1(meal_i) + \hat{\beta}_2(urban_i) + \hat{\beta}_3({\Delta}unemp_i) + \hat{\beta}_4(<hs_i) + 
-\hat{\beta}_5({=}hs) + \hat{\beta}_6(somecollege) + \hat{\beta}_7(degree)$$
-$$+ \hat{\beta}_8(hhincome) + \hat{\beta}_9(region) + \hat{\beta}_{10}(internet) + \hat{\beta}_{11}(hispanic) + \hat{\beta}_{12}(white)$$
+\hat{\beta}_5({=}hs_i) + \hat{\beta}_6(somecollege_i) + \hat{\beta}_7(degree_i)$$
+$$+ \hat{\beta}_8(hhincome_i) + \hat{\beta}_9(region_i) + \hat{\beta}_{10}(internet_i) + \hat{\beta}_{11}(hispanic_i) + \hat{\beta}_{12}(white_i)$$
+
+```{r residspatial, echo = FALSE, out.width = "100%", fig.align = "center"}
+include_graphics("img/finc_residspatial.png")
+```
+
 ---
 
-## Linear Regression Results: Percent Change
+## Main Linear Regression Results: Percent Change
 
 ```{r run_regression_0, message = FALSE, warning = FALSE, echo = FALSE, fig.show='hide'}
 
@@ -218,31 +181,7 @@ knitr::kable(caption="Findings of Main Linear Regression of Food Insecurity Chan
 
 ---
 
-## Linear Regression Extended Results: Percent Change
-
-```{r linear-extended-1, message = FALSE, warning = FALSE, echo = FALSE}
-finc_linear_3 <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`FI_PC_Change` ~ `Urban_cat` + `Percent non-Hispanic White` + `Household Income` * `Unemployment Change`  + `Region` , data = finc)
-
-finc_linear_3 %>% tidy(conf.int=TRUE) %>% 
-select(term, estimate, p.value, conf.low, conf.high) %>%
-knitr::kable(caption="Findings: Interaction Linear Regression of Food Insecurity Rates by NC County, 2021")
-```
-
-$R^2$ Value: Main
-```{r r-squared-1, echo=FALSE}
-glance(finc_linear_1)$adj.r.squared
-```
-
-$R^2$ Value: Interaction
-```{r r-squared-3, echo=FALSE}
-glance(finc_linear_3)$adj.r.squared
-```
-
----
-
-## Linear Regression Results: 2021 Food Insecurity Rate
+## Main Linear Regression Results: 2021 Food Insecurity Rate
 
 ```{r run_regression_1, echo=FALSE}
 finc_linear_2 <- linear_reg() %>%
@@ -251,56 +190,62 @@ finc_linear_2 <- linear_reg() %>%
 
 finc_linear_2 %>% tidy(conf.int=TRUE) %>% 
 select(term, estimate, p.value, conf.low, conf.high) %>%
-knitr::kable(caption="Findings Main Linear Regression of Food Insecurity Rates by NC County, 2021")
+knitr::kable(caption="Findings of Main Linear Regression of Food Insecurity Rates by NC County, 2021")
 ```
 
 ---
 
-## Linear Regression Results Extended: 2021 Food Insecurity Rate
+## Linear Regression Extended Results
 
-```{r linear-extended-2, message = FALSE, warning = FALSE, echo = FALSE}
-finc_linear_4 <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`x100 2021 FI Percent` ~ `Unemployment Change` * `Household Income` + `Percent Less than HS` + `Region`, data = finc)
+- Used only significant predictor variables for both response variables (**2021 food insecurity rates** and **food insecurity percent change** for North Carolina based on county data) to develop new linear regression model, and testing different combinations of interaction terms to determine the greaterst rise in $R^2_{adj}$ from Main to Interaction Model.
 
-finc_linear_4 %>% tidy(conf.int=TRUE) %>% 
-select(term, estimate, p.value, conf.low, conf.high) %>%
-knitr::kable(caption="Findings: Interaction Linear Regression of Food Insecurity Rates by NC County, 2021")
+Percent Change with Significant Variables and Interaction Effects Between `Household Income` * `Unemployment Change`
+
+$R^2_{adj}$ Value: Main
+```{r r-squared-1, echo=FALSE}
+glance(finc_linear_1)$adj.r.squared
 ```
 
-$R^2$ Value: Main
+$R^2_{adj}$ Value: Interaction
+```{r r-squared-3, echo=FALSE}
+finc_linear_3 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`FI_PC_Change` ~ `Urban_cat` + `Percent non-Hispanic White` + `Household Income` * `Unemployment Change`  + `Region` , data = finc)
+
+glance(finc_linear_3)$adj.r.squared
+```
+
+2021 Rate with Significant Variables and Interaction Effects Between `Household Income` * `Unemployment Change`
+
+$R^2_{adj}$ Value: Main
 ```{r r-squared-2, echo=FALSE}
 glance(finc_linear_2)$adj.r.squared
 ```
 
-$R^2$ Value: Interaction
+$R^2_{adj}$ Value: Interaction
 ```{r r-squared-4, echo=FALSE}
+finc_linear_4 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`x100 2021 FI Percent` ~ `Unemployment Change` * `Household Income` + `Percent Less than HS` + `Region`, data = finc)
+
 glance(finc_linear_4)$adj.r.squared
 ```
 
 ---
 
-## Logistic Regression Exploration
-
-- **If there is evidence to support that there has been a statistically significant change to food insecurity rates from 2019 to 2021, to what extent are categorical variables detailed above able to predict a percent change of greater than 10% in food insecurity from 2019 to 2021, signifying a greater understanding into the most impacted areas of North Carolina during the two year period?**
-
-- A logistic regression model was developed to follow the following where `urban` refers to a binary urban or non-urban, while `region` refers to a categorical variable with three levels and the Piedmont Region as the referent group.
+## Logistic Regression Model Exploration and Equation
 
 ```{r stacked, echo = FALSE, out.width = "125%", fig.align = "center"}
 include_graphics("img/finc_2stacked.png")
 ```
 
----
-
-## Logistic Regression Model Equation
+- A logistic regression model was developed to graph **food insecurity rate percent change of greater than 10%** in food insecurity from 2019 to 2021 in NC counties where `urban` refers to a binary urban or non-urban, while `region` refers to a categorical variable with three levels and the Piedmont Region as the referent group.
 
 - Regression Model:
 $$\log(\frac{\pi_i}{1-\pi_i}) = \hat{\beta}_0 + \hat{\beta}_1(urban_i) + \hat{\beta}_2(region_i) $$
-
 ---
 
-## Logistic Regression Results
-
+## Logistic Regression Model Results
 
 ```{r run_log_regression_1, message = FALSE, warning = FALSE, echo = FALSE}
 
@@ -318,20 +263,12 @@ knitr::kable(caption="Results of Logistic Regression Table Determining Odds
 of Food Security Change During Pandemic Greater than 10% by Urban-Rural Status")
 ```
 
----
-
-## Big Takeaways
-
-- Using $\alpha = 0.05$, there is significance to support the conclusion that there was a significant increase in NC county food insecurity rates from 2019 to 2021 of at least 1% and a percent change of at least 9%.
-
-- The following variables were found **not** to be a statistically significant predictive impact on neither rates of percent change of food insecurity rates from 2019 to 2021 and rates of food insecurity incurred at the NC county level in 2021: **a 2019 per county cost per meal estimate, the percent of county adults with an educational level at a High School Degree or GED but no more, the percent of county adults with an educational level recognized as some college having been completed, a categorical comparison of NC Mountains County residents to Piedmont residents, the percent of county residents with broadband internet connection at home, and the percent of county residents categorized as "Hispanic".**
-
-- The following variables were found to be a statistically significant predictive impact on both rates of percent change of food insecurity rates from 2019 to 2021 and rates of food insecurity incurred at the NC county level in 2021: **Change in County Unemployment Rate from 2019 to 2021, Average County Household Income Estimate, and being in the Coastal Plains vs. Piedmont Region of North Carolina.**
-
-- Interaction Terms of **Change in County Unemployment Rate from 2019 to 2021 and Average County Household Income Estimates** lead to a stronger linear regression model.
-
-- There is a significantly lower odds of having a percent change in food insecurity rates from 2019 to 2021 of greater than 10% for **rural** counties opposed to urban counties and for **both Coastal Plains and Mountains** Counties opposed to Piedmont Counties
+- There is a significantly **lower odds** of having a percent change in food insecurity rates from 2019 to 2021 of greater than 10% for **rural** counties opposed to urban counties and for **both Coastal Plains and Mountains** Counties opposed to Piedmont Counties
 
 ---
 
 ## Thank You! :)
+
+```{r final, echo = FALSE, out.width = "65%", fig.align = "center"}
+include_graphics("img/finc_la.png")
+```
