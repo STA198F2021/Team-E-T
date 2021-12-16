@@ -211,7 +211,7 @@ For the second T-test and 95% Confidence Interval for the variable that was the 
 
 # Linear Regression Results
 
-```{r run_regression_0, message = FALSE, warning = FALSE, echo = FALSE, fig.show='hide'}
+```{r run_regression_0, message = FALSE, warning = FALSE, echo = FALSE}
 
 finc$Region=as.factor(finc$Region)
 
@@ -227,7 +227,7 @@ ggplot(finc_linear_1_aug, mapping = aes(x = .fitted, y = .resid)) +
   geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
   labs(x = "2019 to 2021 Food Inscurity Percent Change by NC County", 
        y = "Residuals", 
-       title = "Residuals of Linear Regression for 2019 to 2021 
+       title = "Residuals of Main Linear Regression for 2019 to 2021 
 Food Inscurity Percent Change by NC County")
 
 
@@ -244,6 +244,47 @@ ggplot(finc_linear_2_aug, mapping = aes(x = .fitted, y = .resid)) +
        title = "Residuals of Main Linear Regression of Food Insecurity Rates in NC, 
 2021")
 ```
+
+```{r run_regression_log, message = FALSE, warning = FALSE, echo = FALSE}
+
+finc_log <- finc %>%
+   mutate(`FI_PC_Change`=log(`FI_PC_Change`)) %>%
+   mutate(`x100 2021 FI Percent` =log(`x100 2021 FI Percent`))
+
+finc_log$Region=as.factor(finc_log$Region)
+
+finc_log$Region=relevel(finc_log$Region, ref = "Piedmont")
+
+finc_log_linear_1 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`FI_PC_Change` ~ `2019 Cost per Meal` + `Urban_cat` + `Unemployment Change` + `Percent Less than HS` + `HS or GED` + `Some College, No Degree` + `Household Income` + `Region` + `Percent Broadband Internet at Home` + `Hispanic` + `Percent non-Hispanic White`, data = finc_log)
+
+finc_log_linear_1_aug <- augment(finc_log_linear_1$fit)
+ggplot(finc_log_linear_1_aug, mapping = aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
+  labs(x = "Log of 2019 to 2021 Food Inscurity Percent Change by NC County", 
+       y = "Residuals", 
+       title = "Residuals of Log of Main Linear Regression for 2019 to 2021 
+Food Inscurity Percent Change by NC County")
+
+
+finc_log_linear_2 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(`x100 2021 FI Percent` ~ `2019 Cost per Meal` + `Urban_cat` + `Unemployment Change` + `Percent Less than HS` + `HS or GED` + `Some College, No Degree` + `Household Income` + `Region` + `Percent Broadband Internet at Home` + `Hispanic` + `Percent non-Hispanic White`, data = finc_log)
+
+finc_log_linear_2_aug <- augment(finc_log_linear_2$fit)
+ggplot(finc_log_linear_2_aug, mapping = aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
+  labs(x = "Log of 2021 Food Inscurity Rates by NC County", 
+       y = "Residuals", 
+       title = "Residuals of Log of Main Linear Regression of Food Insecurity Rates in 
+NC, 2021")
+```
+
+
+
 ```{r residual-plot, echo=FALSE, message = FALSE, warning = FALSE, echo = FALSE, fig.show='hide'}
 
 nc <- st_read(system.file("shapes/sids.shp", package="spData")[1], quiet=TRUE) %>%
